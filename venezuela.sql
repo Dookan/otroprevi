@@ -843,7 +843,7 @@ INSERT INTO municipios (id_municipio, id_estado, municipio) VALUES
 (387, 20, 'Trujillo'),
 (388, 20, 'Urdaneta'),
 (389, 20, 'Valera'),
-(390, 21, 'Vargas'),
+(390, 21, 'La Guaira'),
 (391, 22, 'Arístides Bastidas'),
 (392, 22, 'Bolívar'),
 (407, 22, 'Bruzual'),

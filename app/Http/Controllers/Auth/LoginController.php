@@ -53,11 +53,13 @@ class LoginController extends Controller
         //     'username.exists' => "El nombre de usuario proporcionado es incorrecto",
         // ];
 
+        
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required|min:8',
             // 'g-recaptcha-response' => new Captcha()
         ]);
+
 
         // Attempt to log the user in
         if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {

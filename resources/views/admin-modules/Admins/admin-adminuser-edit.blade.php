@@ -4,9 +4,6 @@
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <a href="/admin/change-password/{{$id}}" class="btn btn-primary">
-                Cambiar contraseña
-            </a>
             <div class="card">
                 <div class="card-header">Actualizar Usuario</div>
 

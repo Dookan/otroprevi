@@ -1,4 +1,4 @@
-@extends('layouts.admin-modules')
+@extends('layouts.user-modules')
 
 @section('module')
 <div class="container">
@@ -14,7 +14,7 @@
 
                         <div class="form-group col-md-12">
                             <label for="type" class="col-form-label text-md-right">Tipo de vehículo</label>
-                            <input id="type" type="text" class="form-control @error('type') is-invalid @enderror" name="type" placeholder="..." autocomplete="off" value="{{$vehicle_type->id}}">
+                            <input id="type" type="text" class="form-control @error('type') is-invalid @enderror" name="type" placeholder="..." autocomplete="off" value="{{$vehicle_type->type}}">
 
                             @error('type')
                             <span class="invalid-feedback" role="alert">

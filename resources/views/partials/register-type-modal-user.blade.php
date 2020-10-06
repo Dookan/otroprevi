@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="{{route('register.type.user.submit')}}" id="types_form">
+        <form method="POST" action="{{route('user.register.type.submit')}}" id="types_form">
           @csrf
 
           <div class="form-group col-md-12">

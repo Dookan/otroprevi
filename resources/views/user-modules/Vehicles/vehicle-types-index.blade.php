@@ -1,4 +1,4 @@
-@extends('layouts.admin-modules')
+@extends('layouts.user-modules')
 
 @section('module')
 <a class="btn btn-light shadow" href="{{ route('user.index.vehicles') }}">Ver vehículos</a>

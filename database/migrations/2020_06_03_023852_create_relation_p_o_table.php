@@ -18,7 +18,7 @@ class CreateRelationPOTable extends Migration
             $table->bigInteger('policy_id');
             $table->bigInteger('office_id');
             $table->timestamps();
-
+            
             $table->foreign('policy_id')->references('id')->on('policies');
             $table->foreign('office_id')->references('id')->on('offices');
         });

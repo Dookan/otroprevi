@@ -11,7 +11,7 @@ class ActivityLog extends Model
     // protected $dateFormat = 'Y-m-d H:i:s.u04';
 
     public function admin(){
-    	return $this->belongsTo('App\Admin', 'causer_id', 'id');
+    	return $this->belongsTo('App\Admin', 'causer_id', 'id')->withTrashed();
     }
 
     public function user(){

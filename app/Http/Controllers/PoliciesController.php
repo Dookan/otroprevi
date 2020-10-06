@@ -486,7 +486,7 @@ class PoliciesController extends Controller
 
         $vehicle_weight = $request->input('vehicle_weight') . 'Kg';
 
-        $policy->price_id             = $request->input('price');
+        // $policy->price_id             = $request->input('price');
 
         // Datos del vehiculo
         $policy->vehicle_id                 = $vehicle_id[0];
@@ -523,31 +523,38 @@ class PoliciesController extends Controller
         $client_ci_contractor       = $request->input('id_type_contractor') . $request->input('client_ci_contractor');
 
         // Datos del precio
-        $price_info = Price::where('id', $request->input('price'))->first();
+        $price_info = Price::where('id', $request->input('price'))->withTrashed()->first();        
 
-        $policy->price_id = $request->input('price');
-        $policy->damage_things = $price_info->damage_things;
-        $policy->premium1 = $price_info->premium1;
-        $policy->damage_people = $price_info->damage_people;
-        $policy->premium2 = $price_info->premium2;
-        $policy->disability = $price_info->disability;
-        $policy->premium3 = $price_info->premium3;
-        $policy->legal_assistance = $price_info->legal_assistance;
-        $policy->premium4 = $price_info->premium4;
-        $policy->death = $price_info->death;
-        $policy->premium5 = $price_info->premium5;
-        $policy->medical_expenses = $price_info->medical_expenses;
-        $policy->premium6 = $price_info->premium6;
-        $policy->crane = $price_info->crane;
-        $policy->total_premium = $price_info->total_premium;
-        $policy->total_all = $price_info->total_all;
+        if($request->input('price') == $policy->price_id){ 
+            $policy->save();
+            // return redirect('/admin/index-policies');
+            // return gettype($policy->price_id);
+            return redirect('/admin/index-policies');
+        }else{
+            $policy->price_id = $request->input('price');
+            $policy->damage_things = $price_info->damage_things;
+            $policy->premium1 = $price_info->premium1;
+            $policy->damage_people = $price_info->damage_people;
+            $policy->premium2 = $price_info->premium2;
+            $policy->disability = $price_info->disability;
+            $policy->premium3 = $price_info->premium3;
+            $policy->legal_assistance = $price_info->legal_assistance;
+            $policy->premium4 = $price_info->premium4;
+            $policy->death = $price_info->death;
+            $policy->premium5 = $price_info->premium5;
+            $policy->medical_expenses = $price_info->medical_expenses;
+            $policy->premium6 = $price_info->premium6;
+            $policy->crane = $price_info->crane;
+            $policy->total_premium = $price_info->total_premium;
+            $policy->total_all = $price_info->total_all;
+    
+            $policy->client_name_contractor     = ucwords($client_names_contractor);
+            $policy->client_lastname_contractor = ucwords($client_lastname_contractor);
+            $policy->client_ci_contractor       = strtoupper($client_ci_contractor);
+            $policy->save();
+            return redirect('/admin/index-policies');
+        }
 
-        $policy->client_name_contractor     = ucwords($client_names_contractor);
-        $policy->client_lastname_contractor = ucwords($client_lastname_contractor);
-        $policy->client_ci_contractor       = strtoupper($client_ci_contractor);
-        $policy->save();
-
-        return redirect('/admin/index-policies');
     }
 
     /**

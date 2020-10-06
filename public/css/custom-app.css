@@ -71,17 +71,9 @@ a:hover{
 	border: 1px solid #fff;
 }
 
-#card5:hover{
-	
-}
-
 #card6{
 	background-color: #42A2F1;
 	border: 1px solid #fff;
-}
-
-#card6:hover{
-	
 }
 
 input[type=number]::-webkit-inner-spin-button, 
