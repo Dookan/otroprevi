@@ -154,6 +154,10 @@
                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                         Cambiar Contraseña
                       </a>
+                      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#importDatabase">
+                        <i class="fas fa-database fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Importar Base de Datos
+                      </a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                         <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -204,6 +208,38 @@
                   @csrf
                 </form>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Database Modal-->
+        <div class="modal fade" id="importDatabase" tabindex="-1" role="dialog" aria-labelledby="importDatabaseModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Seleccione un archivo .csv</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{{ route('upload.db') }}" method="POST" enctype="multipart/form-data">
+                  @csrf
+                    <label for="file">Seleccionar un archivo:</label>
+                    <input type="file" class="@error('file') is-invalid @enderror" name="file" id="file" required>
+                      
+                      @error('file')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                      @enderror  
+                  <div class="modal-footer">
+                    <input type="submit" name="submit" class="btn btn-primary" value="Importar">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                  </div>
+                </form>
+              </div>
+
             </div>
           </div>
         </div>

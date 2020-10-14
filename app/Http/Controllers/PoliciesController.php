@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
 use Illuminate\Http\Request;
 use Auth;
+use Session;
 use App\User;
 use App\Price;
 use App\Policy;
@@ -13,6 +15,7 @@ use App\VehicleClass;
 use App\Estado;
 use App\Municipio;
 use App\Parroquia;
+use Illuminate\Support\Facades\File;
 use PDF;
 use Carbon\Carbon;
 
@@ -578,7 +581,8 @@ class PoliciesController extends Controller
 
         $data = ['policy' => $policy];
 
-        $pdf = PDF::loadView('user-modules.Policies.policy-pdf', $data)->setPaper('8.5x14', 'portrait');
+        $customPaper = array(0,0,700,1050);
+        $pdf = PDF::loadView('user-modules.Policies.policy-pdf', $data)->setPaper($customPaper);
 
         $fileName = $policy->id . $policy->client_name . \Carbon\Carbon::parse($policy->created_at)->format('d-m-Y');
 
@@ -590,7 +594,9 @@ class PoliciesController extends Controller
         $policy = Policy::find($id);
         $data = ['policy' => $policy];
 
-        $pdf = PDF::loadView('admin-modules.Policies.admin-policy-pdf', $data)->setPaper('8.5x14', 'portrait');
+        $customPaper = array(0,0,700,1050);
+
+        $pdf = PDF::loadView('admin-modules.Policies.admin-policy-pdf', $data)->setPaper($customPaper);
 
         $fileName = $policy->id . $policy->client_name . \Carbon\Carbon::parse($policy->created_at)->format('d-m-Y');
 
@@ -644,6 +650,269 @@ class PoliciesController extends Controller
         return redirect('/admin/index-policies')->with('success', 'Póliza renovada correctamente');
     }
     
+    //export CSV
+    public function showExport(){
+        return view('user-modules.Export.show-export');
+    }
+
+    public function exportCsv(Request $request)
+    {
+        $fileName = 'polizas.csv';
+        $policies = Policy::all();
+
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('id', 'user_id', 'admin_id', 'price_id', 'vehicle_id', 'id_estado', 'id_municipio', 'id_parroquia', 'vehicle_class_id', 'client_address', 'client_email', 'client_name', 'clien_lastname', 'client_ci', 'client_name_contractor', 'client_lastname_contractor', 'client_ci_contractor', 'client_phone', 'vehicle_brand', 'vehicle_model', 'vehicle_type', 'vehicle_registration', 'vehicle_bodywork_serial', 'vehicle_weight', 'vehicle_motor_serial', 'vehicle_certificate_number', 'vehicle_color', 'vehicle_year', 'used_for', 'status', 'expiring_date', 'created_at', 'updated_at', 'deleted_at', 'damage_things', 'premium1', 'damage_people', 'premium2', 'disability', 'premium3', 'legal_assistance', 'premium4', 'death', 'premium5', 'medical_expenses', 'premium6', 'crane', 'total_premium', 'total_all');
+
+        $callback = function () use ($policies, $columns) {
+            $file = fopen('php://output', 'w');
+            // fputcsv($file, $columns);
+
+            foreach ($policies as $policy) {
+                $row['id']  = $policy->id;
+                $row['user_id']  = $policy->user_id;
+                $row['admin_id']    = $policy->admin_id;
+                $row['price_id']    = $policy->price_id;
+                $row['vehicle_id']  = $policy->vehicle_id;
+                $row['id_estado']  = $policy->id_estado;
+                $row['id_municipio']  = $policy->id_municipio;
+                $row['id_parroquia']  = $policy->id_parroquia;
+                $row['vehicle_class_id']  = $policy->vehicle_class_id;
+                $row['client_address']  = $policy->client_address;
+                $row['client_email']  = $policy->client_email;
+                $row['client_name']  = $policy->client_name;
+                $row['client_lastname']  = $policy->client_lastname;
+                $row['client_ci']  = $policy->client_ci;
+                $row['client_name_contractor']  = $policy->client_name_contractor;
+                $row['client_lastname_contractor']  = $policy->client_lastname_contractor;
+                $row['client_ci_contractor']  = $policy->client_ci_contractor;
+                $row['client_phone']  = $policy->client_phone;
+                $row['vehicle_brand']  = $policy->vehicle_brand;
+                $row['vehicle_model']  = $policy->vehicle_model;
+                $row['vehicle_type']  = $policy->vehicle_type;
+                $row['vehicle_registration']  = $policy->vehicle_registration;
+                $row['vehicle_bodywork_serial']  = $policy->vehicle_bodywork_serial;
+                $row['vehicle_weight']  = $policy->vehicle_weight;
+                $row['vehicle_motor_serial']  = $policy->vehicle_motor_serial;
+                $row['vehicle_certificate_number']  = $policy->vehicle_certificate_number;
+                $row['vehicle_color']  = $policy->vehicle_color;
+                $row['vehicle_year']  = $policy->vehicle_year;
+                $row['used_for']  = $policy->used_for;
+                $row['status']  = $policy->status;
+                $row['expiring_date']  = $policy->expiring_date;
+                $row['created_at']  = $policy->created_at;
+                $row['updated_at']  = $policy->updated_at;
+                $row['deleted_at']  = $policy->deleted_at;
+                $row['damage_things']  = $policy->damage_things;
+                $row['premium1']  = $policy->premium1;
+                $row['damage_people']  = $policy->damage_people;
+                $row['premium2']  = $policy->premium2;
+                $row['disability']  = $policy->disability;
+                $row['premium3']  = $policy->premium3;
+                $row['legal_assistance']  = $policy->legal_assistance;
+                $row['premium4']  = $policy->premium4;
+                $row['death']  = $policy->death;
+                $row['premium5']  = $policy->premium5;
+                $row['medical_expenses']  = $policy->medical_expenses;
+                $row['premium6']  = $policy->premium6;
+                $row['crane']  = $policy->crane;
+                $row['total_premium']  = $policy->total_premium;
+                $row['total_all']  = $policy->total_all;
+               
+                fputcsv($file, array(
+                    $row['id'], 
+                    $row['admin_id'], 
+                    $row['admin_id'], 
+                    $row['price_id'], 
+                    $row['vehicle_id'], 
+                    $row['id_estado'], 
+                    $row['id_municipio'], 
+                    $row['id_parroquia'], 
+                    $row['vehicle_class_id'], 
+                    $row['client_address'],
+                    $row['client_email'],
+                    $row['client_name'],
+                    $row['client_lastname'],
+                    $row['client_ci'],
+                    $row['client_name_contractor'],
+                    $row['client_lastname_contractor'],
+                    $row['client_ci_contractor'],
+                    $row['client_phone'],
+                    $row['vehicle_brand'],
+                    $row['vehicle_model'],
+                    $row['vehicle_type'],
+                    $row['vehicle_registration'],
+                    $row['vehicle_bodywork_serial'],
+                    $row['vehicle_weight'],
+                    $row['vehicle_motor_serial'],
+                    $row['vehicle_certificate_number'],
+                    $row['vehicle_color'],
+                    $row['vehicle_year'],
+                    $row['used_for'],
+                    $row['status'],
+                    $row['expiring_date'],
+                    $row['created_at'],
+                    $row['updated_at'],
+                    $row['created_at'],
+                    $row['damage_things'],
+                    $row['premium1'],
+                    $row['damage_people'],
+                    $row['premium2'],
+                    $row['disability'],
+                    $row['premium3'],
+                    $row['legal_assistance'],
+                    $row['premium4'],
+                    $row['death'],
+                    $row['premium5'],
+                    $row['medical_expenses'],
+                    $row['premium6'],
+                    $row['crane'],
+                    $row['total_premium'],
+                    $row['total_all']));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+
+    // upload CSV file
+    public function uploadFile(Request $request){
+
+        
+        if ($request->input('submit') != null ){
+    
+          $file = $request->file('file');
+    
+          // File Details 
+          $filename = $file->getClientOriginalName();
+          $extension = $file->getClientOriginalExtension();
+          $tempPath = $file->getRealPath();
+          $fileSize = $file->getSize();
+          $mimeType = $file->getMimeType();
+    
+          // Valid File Extensions
+          $valid_extension = array("csv");
+    
+          // 2MB in Bytes
+        //   $maxFileSize = 2097152; 
+    
+          // Check file extension
+          if(in_array(strtolower($extension),$valid_extension)){
+        
+              // File upload location
+              $location = 'uploads';
+    
+              // Upload file
+              $file->move($location,$filename);
+    
+              // Import CSV to Database
+              $filepath = public_path($location."/".$filename);
+    
+              // Reading file
+              $file = fopen($filepath,"r");
+
+              $importData_arr = array();
+              $i = 0;
+    
+              while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                 $num = count($filedata );
+                 
+                 // Skip first row (Remove below comment if you want to skip the first row)
+                //  if($i == 0){
+                //     $i++;
+                //     continue; 
+                //  }
+                 for ($c=0; $c < $num; $c++) {
+                    $importData_arr[$i][] = $filedata [$c];
+                 }
+                 $i++;
+              }
+              fclose($file);
+              
+            // if(File::exists(public_path($location."/".$filename))){
+            //     File::delete(public_path($location."/".$filename));
+            // }
+              // Insert to MySQL database
+              foreach($importData_arr as $importData){
+    
+                $insertData = array(
+                    "id"=>$importData[0],
+                    "user_id"=>$importData[1],
+                    "admin_id"=>NULL,
+                    "price_id"=>$importData[3],
+                    "vehicle_id"=>$importData[4],
+                    "id_estado"=>$importData[5],
+                    "id_municipio"=>$importData[6],
+                    "id_parroquia"=>$importData[7],
+                    "vehicle_class_id"=>$importData[8],
+                    "client_address"=>$importData[9],
+                    "client_email"=>$importData[10],
+                    "client_name"=>$importData[11],
+                    "client_lastname"=>$importData[12],
+                    "client_ci"=>$importData[13],
+                    "client_name_contractor"=>$importData[14],
+                    "client_lastname_contractor"=>$importData[15],
+                    "client_ci_contractor"=>$importData[16],
+                    "client_phone"=>$importData[17],
+                    "vehicle_brand"=>$importData[18],
+                    "vehicle_model"=>$importData[19],
+                    "vehicle_type"=>$importData[20],
+                    "vehicle_registration"=>$importData[21],
+                    "vehicle_bodywork_serial"=>$importData[22],
+                    "vehicle_weight"=>$importData[23],
+                    "vehicle_motor_serial"=>$importData[24],
+                    "vehicle_certificate_number"=>$importData[25],
+                    "vehicle_color"=>$importData[26],
+                    "vehicle_year"=>$importData[27],
+                    "used_for"=>$importData[28],
+                    "status"=>$importData[29],
+                    "expiring_date"=>$importData[30],
+                    "created_at"=>$importData[31],
+                    "updated_at"=>$importData[32],
+                    "deleted_at"=>NULL,
+                    "damage_things"=>$importData[34],
+                    "premium1"=>$importData[35],
+                    "damage_people"=>$importData[36],
+                    "premium2"=>$importData[37],
+                    "disability"=>$importData[38],
+                    "premium3"=>$importData[39],
+                    "legal_assistance"=>$importData[40],
+                    "premium4"=>$importData[41],
+                    "death"=>$importData[42],
+                    "premium5"=>$importData[43],
+                    "medical_expenses"=>$importData[44],
+                    "premium6"=>$importData[45],
+                    "crane"=>$importData[46],
+                    "total_premium"=>$importData[47],
+                    "total_all"=>$importData[48]);
+    
+                    Policy::insertData($insertData);
+    
+              }
+    
+              Session::flash('message','Import Successful.');
+           
+    
+          }else{
+             Session::flash('message','Invalid File Extension.');
+          }
+    
+        }
+    
+        // Redirect to index
+        return redirect('/admin/show-import-form');
+      }
+
+
     // AJAX REQUESTS
     public function price_select(Request $request)
     {

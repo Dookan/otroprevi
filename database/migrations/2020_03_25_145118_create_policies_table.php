@@ -15,8 +15,8 @@ class CreatePoliciesTable extends Migration
     {
         Schema::create('policies', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('user_id')->nullable();
-            $table->bigInteger('admin_id')->nullable();
+            $table->bigInteger('user_id')->nullable()->default(NULL);
+            $table->bigInteger('admin_id')->nullable()->default(NULL);
             $table->bigInteger('price_id');
             $table->bigInteger('vehicle_id');
             $table->bigInteger('id_estado');
@@ -46,7 +46,7 @@ class CreatePoliciesTable extends Migration
             $table->boolean('status')->default(0);
             $table->date('expiring_date');
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes()->nullable()->default(NULL);
 
             // Fixed prices
             $table->decimal('damage_things', 25, 2)->default('0');

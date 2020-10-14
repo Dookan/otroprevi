@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Support\Facades\DB;
 
 
 class Policy extends Model
@@ -72,4 +73,13 @@ class Policy extends Model
     public function parroquia(){
         return $this->belongsTo('App\Parroquia', 'id_parroquia', 'id_parroquia');
     }    
+
+    public static function insertData($data){
+
+        $value = DB::table('policies')->where('id', $data['id'])->get();
+        if($value->count() == 0){
+           DB::table('policies')->insert($data);
+        }
+     }
+
 }

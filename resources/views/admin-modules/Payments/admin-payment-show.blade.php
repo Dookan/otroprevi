@@ -92,7 +92,7 @@
 									</button>
 								</div>
 								<div class="modal-body">
-									<p class="text-danger">Solo pueden seleccionar formatos de imagen y pdf</p>
+									<p class="text-danger">Solo se pueden seleccionar formatos de imagen y pdf</p>
 									<form action="/admin/update-payment/{{$payment->id}}" method="POST"
 										enctype="multipart/form-data" style="display: none;">
 										@csrf

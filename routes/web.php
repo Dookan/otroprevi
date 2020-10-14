@@ -11,7 +11,9 @@
 |
 */
 
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+Route::get('/dashboard', 'PoliciesController@index')->name('dashboard');
+Route::get('/export-csv', 'PoliciesController@exportCsv')->name('export.csv');
+Route::get('/dashboard', 'PoliciesController@index')->name('dashboard');
 /*
 |--------------------------------------------------------------------------
 | admin routes
@@ -122,10 +124,13 @@ Route::prefix('admin')->middleware('auth:admin')->group(function(){
     Route::post('/register-payment/{id}', 'PaymentsController@store_admin')->name('register.payment.submit');
     Route::put('/update-payment/{id}', 'PaymentsController@update')->name('payment.bill');
 
-
+    // Route::get('/show-import-form', function(){
+    //     return view('admin-modules.Policies.admin-policies-import');
+    // });
+    Route::post('/upload-db', 'PoliciesController@uploadFile')->name('upload.db');
 
     // Ruta dashboard admin
-    Route::get('/a51a86dc336dac898799feb272cdc9e85cdf97ae56959345b1f955e15ec532cb', 'AdminController@index')->name('admin');
+    Route::get('/', 'AdminController@index')->name('admin');
 });
 
 /*
